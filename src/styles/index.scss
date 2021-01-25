@@ -1,0 +1,145 @@
+@charset "utf-8";
+@import url("https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat&display=swap");
+
+// 1. Import the initial variables
+@import "~bulma/sass/utilities/initial-variables.sass";
+@import "~bulma/sass/utilities/functions.sass";
+
+:root {
+  --first-color: black;
+  --second-color: white;
+  --third-color: white;
+
+  --first-selector-color: white;
+  --second-selector-color: white;
+  --third-selector-color: white;
+
+  --first-color-inverted: white;
+  --second-color-inverted: white;
+  --third-color-inverted: white;
+}
+$first: var(--first-color);
+$second: var(--second-color);
+$third: var(--third-color);
+
+$first-inverted : var(--first-color-inverted);
+
+$almost-white: #efefef;
+$almost-black: #202020;
+
+$family-primary: "Caveat", cursive;
+$family-secondary: "Mrs Saint Delafield", cursive;
+
+$size-1: 3.6rem;
+$size-7: 0.7rem;
+
+$button-border-color: $grey;
+$button-background-color: none;
+$button-color: none;
+$control-radius: none;
+
+@import "~bulma/bulma.sass";
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  background-color: $first;
+}
+
+.loading {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  color: $first;
+}
+
+.container {
+  max-width: 70%;
+}
+
+.painting {
+  // max-width: 60vh;
+  max-height: 60vh;
+  border: 0.25em solid black;
+  -webkit-box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, 0.7);
+  box-shadow: 3px 3px 6px 3px rgba(0, 0, 0, 0.7);
+}
+
+.header-text {
+  color: $first-inverted;
+  a {
+    color: $first-inverted;
+  }
+  a:hover {
+    color: $first-inverted;
+  }
+}
+
+.selector {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid $grey;
+  border-radius: 3px;
+
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.first-color-selector {
+  background: var(--first-selector-color);
+  color: var(--first-color-inverted);
+  color: var(--first-color-inverted);
+}
+.second-color-selector {
+  background: var(--second-selector-color);
+  color: var(--second-color-inverted);
+  border-color: var(--first-color-inverted);
+}
+.third-color-selector {
+  background: var(--third-selector-color);
+  color: var(--third-color-inverted);
+  border-color: var(--first-color-inverted);
+}
+.light-color-selector {
+  background: $almost-white;
+  color: $almost-black;
+  border-color: $almost-black;
+}
+.dark-color-selector {
+  background: $almost-black;
+  color: $almost-white;
+  border-color: $almost-white;
+}
+
+body, p, h1, a {
+  -webkit-transition: color 0.5s ease, background-color 0.5s ease;
+  -moz-transition: color 0.5s ease, background-color 0.5s ease;
+  -ms-transition: color 0.5s ease, background-color 0.5s ease;
+  -o-transition: color 0.5s ease, background-color 0.5s ease;
+  transition: color 0.5s ease, background-color 0.5s ease;
+}
+
+
+@media (max-width: $desktop) {
+  .hero-body {
+    align-items: flex-start !important;
+  }
+  img {
+    margin-top: 10vh;
+  }
+}

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { usePalette } from "color-thief-react";
+import randomize from "../utils/randomize";
 import ReactLoading from "react-loading";
 import { FiUpload } from "react-icons/fi";
 import { GoInfo } from "react-icons/go";
@@ -12,7 +13,7 @@ import ColorSelector from "./colorSelector";
 
 const App = () => {
 
-  const [random, setRandom] = useState(500);
+  const [random, setRandom] = useState(randomize());
 
   const imageDefaultApi = `https://picsum.photos/seed/${random}/500`;
 
@@ -136,7 +137,7 @@ const App = () => {
 
   const handleReloadButtonClicked = (event) => {
     event.preventDefault();
-    setRandom(random+1);
+    setRandom(randomize());
     setImage(imageDefaultApi);
   };
 

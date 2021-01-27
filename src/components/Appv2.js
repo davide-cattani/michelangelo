@@ -8,19 +8,18 @@ import { IoReload } from "react-icons/io5";
 import { HiColorSwatch } from "react-icons/hi";
 import { ImUpload } from "react-icons/im";
 
+import Footer from "./footer";
 import { invertColor } from "../utils/convertRgb";
 import ColorSelector from "./colorSelector";
 
+import andreotti from "../images/andreotti.jpg";
+
 const App = () => {
-
-  const [random, setRandom] = useState(randomize());
-
-  const imageDefaultApi = `https://picsum.photos/seed/${random}/500`;
-
   const currentColor = useRef(null);
   const fileInput = useRef(null);
-  // const [image, setImage] = useState(`https://source.unsplash.com/random/`);
-  const [image, setImage] = useState(imageDefaultApi);
+  const [image, setImage] = useState(
+    `https://picsum.photos/seed/${randomize()}/500`
+  );
   const [showInfo, setShowInfo] = useState(false);
   const { data, loading, error } = usePalette(image, 3, "hex", {
     crossOrigin: "",
@@ -37,6 +36,10 @@ const App = () => {
       data[0]
     );
     document.documentElement.style.setProperty(
+      "--first-inverted-selector-color",
+      invertColor(data[0], false)
+    );
+    document.documentElement.style.setProperty(
       "--second-selector-color",
       data[1]
     );
@@ -46,21 +49,15 @@ const App = () => {
     );
 
     document.documentElement.style.setProperty(
-      "--first-color-inverted",
+      "--first-color-inverted-bw",
       invertColor(data[0], true)
     );
     document.documentElement.style.setProperty(
-      "--second-color-inverted",
-      invertColor(data[1], true)
-    );
-    document.documentElement.style.setProperty(
-      "--third-color-inverted",
-      invertColor(data[2], true)
+      "--first-color-inverted",
+      invertColor(data[0], false)
     );
 
     document.documentElement.style.setProperty("--first-color", data[0]);
-    document.documentElement.style.setProperty("--second-color", data[1]);
-    document.documentElement.style.setProperty("--third-color", data[2]);
   };
 
   const handleColorSelectorPressed = (event, color) => {
@@ -72,48 +69,75 @@ const App = () => {
       case "first":
         setInitialColors();
         break;
-      case "second":
-        document.documentElement.style.setProperty("--first-color", data[1]);
-        document.documentElement.style.setProperty("--second-color", data[2]);
-        document.documentElement.style.setProperty("--third-color", data[0]);
+      case "first-inverted":
+        document.documentElement.style.setProperty(
+          "--first-color",
+          invertColor(data[0], false)
+        );
 
         document.documentElement.style.setProperty(
+          "--first-color-inverted-bw",
+          data[0]
+        );
+        document.documentElement.style.setProperty(
           "--first-color-inverted",
+          data[0]
+        );
+        break;
+      case "second":
+        document.documentElement.style.setProperty("--first-color", data[1]);
+
+        document.documentElement.style.setProperty(
+          "--first-color-inverted-bw",
           invertColor(data[1], true)
+        );
+        document.documentElement.style.setProperty(
+          "--first-color-inverted",
+          invertColor(data[1], false)
         );
         break;
       case "third":
         document.documentElement.style.setProperty("--first-color", data[2]);
-        document.documentElement.style.setProperty("--second-color", data[0]);
-        document.documentElement.style.setProperty("--third-color", data[1]);
 
         document.documentElement.style.setProperty(
-          "--first-color-inverted",
+          "--first-color-inverted-bw",
           invertColor(data[2], true)
+        );
+        document.documentElement.style.setProperty(
+          "--first-color-inverted",
+          invertColor(data[2], false)
         );
         break;
       case "light":
         document.documentElement.style.setProperty("--first-color", "#FEFEFE");
-        document.documentElement.style.setProperty("--second-color", "#202020");
-        document.documentElement.style.setProperty("--third-color", "#202020");
 
         document.documentElement.style.setProperty(
-          "--first-color-inverted",
+          "--first-color-inverted-bw",
           invertColor("#FEFEFE", true)
+        );
+        document.documentElement.style.setProperty(
+          "--first-color-inverted",
+          invertColor("#FEFEFE", false)
         );
         break;
       case "dark":
         document.documentElement.style.setProperty("--first-color", "#202020");
-        document.documentElement.style.setProperty("--second-color", "#FEFEFE");
-        document.documentElement.style.setProperty("--third-color", "#FEFEFE");
 
         document.documentElement.style.setProperty(
-          "--first-color-inverted",
+          "--first-color-inverted-bw",
           invertColor("#202020", true)
+        );
+        document.documentElement.style.setProperty(
+          "--first-color-inverted",
+          invertColor("#202020", false)
         );
         break;
     }
 
+    setCurrentColor();
+  };
+
+  const setCurrentColor = () => {
     currentColor.current.innerText = document.documentElement.style.getPropertyValue(
       "--first-color"
     );
@@ -137,11 +161,10 @@ const App = () => {
 
   const handleReloadButtonClicked = (event) => {
     event.preventDefault();
-    setRandom(randomize());
-    setImage(imageDefaultApi);
+    setImage(`https://picsum.photos/seed/${randomize()}/500`);
   };
 
-  if (loading || error) {
+  if (loading) {
     return (
       <div className="loading">
         <ReactLoading
@@ -150,8 +173,27 @@ const App = () => {
           height={"10vh"}
           width={"10vh"}
         />
-        {loading && `Michelangelo is painting..`}
-        {error && error}
+        <div className="text-inverted-color opacity-high">
+          Michelangelo sta colorando..
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container container is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
+        <p className="has-text-centered text-inverted-color opacity-high is-size-1">
+          ops!
+        </p>
+
+        <img className="image mt-0" src={andreotti} />
+        <p className="mt-3 text-inverted-color opacity-high ">
+          Michelangelo è andato in crash!
+        </p>
+        <p className=" text-inverted-color opacity-high ">
+          Ricarica la pagina per favore
+        </p>
       </div>
     );
   }
@@ -164,23 +206,23 @@ const App = () => {
     return (
       <section className="michelangelo hero is-fullheight">
         <div
-          className="info-button is-clickable header-text"
+          className="info-button is-clickable text-inverted-color opacity-low"
           onClick={(event) => handleInfoButtonClicked(event, true)}
         >
-          <GoInfo className="is-size-3-mobile is-size-2-tablet is-size-1-desktop" />
+          <GoInfo className="is-size-3-mobile is-size-1-tablet" />
         </div>
         <div
-          className="reload-button is-clickable header-text"
+          className="reload-button is-clickable text-inverted-color opacity-low"
           onClick={(event) => handleReloadButtonClicked(event)}
         >
-          <IoReload className="is-size-3-mobile is-size-2-tablet is-size-1-desktop" />
+          <IoReload className="is-size-3-mobile is-size-1-tablet" />
         </div>
         <div className="hero-body">
           <div className="container">
             {/* top-level columns */}
             <div className="centered-content columns is-vcentered is-centered is-multiline">
-              <div className="column has-text-centered mt-3 header-text is-12">
-                <h1 className=" header-text subtitle is-size-2-mobile is-size-1-desktop is-family-secondary mb-0">
+              <div className="column has-text-centered mt-3 text-inverted-color opacity-high is-12-touch is-6-desktop">
+                <h1 className="text-inverted-color opacity-high subtitle is-size-2-mobile is-size-1-tablet is-family-secondary mb-0">
                   Michelangelo
                 </h1>
                 <div className="file is-centered">
@@ -198,32 +240,39 @@ const App = () => {
                   </label>
                 </div>
                 <div className="columns is-centered is-multiline is-mobile is-gapless mt-1 is-family-monospace is-uppercase is-size-7 mb-0 mt-2">
-                  <div className="column mx-3 is-narrow ">
+                  <div className="column mx-2 is-narrow ">
                     <ColorSelector
                       color={"first"}
                       colorSelected={handleColorSelectorPressed}
                     />
                   </div>
-                  <div className="column mx-3 is-narrow ">
+                  <div className="column mx-2 is-narrow ">
+                    <ColorSelector
+                      color={"first-inverted"}
+                      display
+                      colorSelected={handleColorSelectorPressed}
+                    />
+                  </div>
+                  <div className="column mx-2 is-narrow ">
                     <ColorSelector
                       color={"second"}
                       display
                       colorSelected={handleColorSelectorPressed}
                     />
                   </div>
-                  <div className="column mx-3 is-narrow ">
+                  <div className="column mx-2 is-narrow ">
                     <ColorSelector
                       color={"third"}
                       colorSelected={handleColorSelectorPressed}
                     />
                   </div>
-                  <div className="column mx-3 is-narrow ">
+                  <div className="column mx-2 is-narrow ">
                     <ColorSelector
                       color={"light"}
                       colorSelected={handleColorSelectorPressed}
                     />
                   </div>
-                  <div className="column mx-3 is-narrow ">
+                  <div className="column mx-2 is-narrow ">
                     <ColorSelector
                       color={"dark"}
                       colorSelected={handleColorSelectorPressed}
@@ -232,8 +281,10 @@ const App = () => {
                 </div>
                 <div
                   ref={currentColor}
-                  className="has-text-centered header-text is-family-monospace is-uppercase is-size-7 mt-3"
-                ></div>
+                  className="current-color has-text-centered text-inverted-color opacity-high is-family-monospace is-uppercase is-size-7 mt-3"
+                >
+                  {data[0]}
+                </div>
               </div>
               <div className="column has-text-centered mt-4">
                 <img
@@ -250,13 +301,15 @@ const App = () => {
           </div>
         </div>
 
+        <Footer />
+
         {showInfo && (
           <div className="modal is-active">
             <div className="modal-background"></div>
             <div className="modal-card px-5">
               <header className="modal-card-head">
                 <p className="modal-card-title">
-                  <GoInfo style={{ verticalAlign: "bottom" }} /> Michelangelo
+                  <GoInfo style={{ verticalAlign: "bottom" }} /> Info
                 </p>
                 <button
                   className="delete"
@@ -265,14 +318,13 @@ const App = () => {
                 ></button>
               </header>
               <section className="modal-card-body">
-                <div className="content">
+                <div className="content has-text-centered">
                   <p className="is-italic has-text-info is-size-7">
-                    Questa webapp ti aiuta a trovare il giusto colore di sfondo,
-                    scegliendo dalla paletta colori di un dipinto o foto.
+                    Non sai di che colore tinteggiare il muro del salotto?
                   </p>
                   <p className="is-italic has-text-info is-size-7">
-                    I tuoi muri di casa saranno perfettamente abbinati ai tuoi
-                    quadri!
+                    Fatti aiutare da Michelangelo a scegliere il colore giusto
+                    in base al quadro che hai appeso!
                   </p>
                   <br />
                   <div className="has-text-centered has-text-success is-size-3">
@@ -280,7 +332,9 @@ const App = () => {
                   </div>
                   <p>
                     Tocca l'immagine per cambiarla, selezionandone una dal tuo
-                    dispositivo. (non verrà salvata da nessuna parte)
+                    dispositivo.
+                    <br />
+                    (Tranquillo, non verrà salvata da nessuna parte!)
                   </p>
                   <div className="has-text-centered has-text-success is-size-3">
                     <HiColorSwatch style={{ verticalAlign: "middle" }} /> <br />
